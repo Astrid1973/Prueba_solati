@@ -1,66 +1,156 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Documentación de la API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Autenticación
 
-## About Laravel
+### Obtener usuario autenticado
+**Endpoint:** `GET /api/user`
+- **Autenticación:** Requiere token de `auth:sanctum`
+- **Respuesta exitosa:**
+  ```json
+  {
+    "id": 1,
+    "name": "Usuario Ejemplo",
+    "email": "usuario@example.com"
+  }
+  ```
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Iniciar sesión
+**Endpoint:** `POST /api/autenticacion`
+- **Parámetros:**
+  ```json
+  {
+    "email": "usuario@example.com",
+    "password": "contraseña123"
+  }
+  ```
+- **Respuesta exitosa:**
+  ```json
+  {
+    "token": "token_de_acceso"
+  }
+  ```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Cerrar sesión
+**Endpoint:** `POST /api/logout`
+- **Autenticación:** Requiere token de `auth:sanctum`
+- **Respuesta exitosa:**
+  ```json
+  {
+    "message": "Cierre de sesión exitoso"
+  }
+  ```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Obtener información del usuario autenticado
+**Endpoint:** `GET /api/me`
+- **Autenticación:** Requiere token de `auth:sanctum`
+- **Respuesta exitosa:**
+  ```json
+  {
+    "id": 1,
+    "name": "Usuario Ejemplo",
+    "email": "usuario@example.com"
+  }
+  ```
 
-## Learning Laravel
+## Usuarios
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Listar usuarios
+**Endpoint:** `GET /api/listUser`
+- **Autenticación:** Requiere token de `auth:sanctum`
+- **Respuesta exitosa:** Lista de usuarios
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Crear usuario
+**Endpoint:** `POST /api/createUser`
+- **Parámetros:**
+  ```json
+  {
+    "name": "Nuevo Usuario",
+    "email": "nuevo@example.com",
+    "password": "contraseña123"
+  }
+  ```
+- **Respuesta exitosa:**
+  ```json
+  {
+    "message": "Usuario creado exitosamente"
+  }
+  ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Tareas
 
-## Laravel Sponsors
+### Crear una tarea
+**Endpoint:** `POST /api/createTask`
+- **Autenticación:** Requiere token de `auth:sanctum`
+- **Parámetros:**
+  ```json
+  {
+    "title": "Nueva tarea",
+    "description": "Descripción de la tarea",
+    "user_id": 1
+  }
+  ```
+- **Respuesta exitosa:**
+  ```json
+  {
+    "id": 1,
+    "title": "Nueva tarea",
+    "description": "Descripción de la tarea",
+    "user_id": 1
+  }
+  ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Listar todas las tareas
+**Endpoint:** `GET /api/listTask`
+- **Autenticación:** Requiere token de `auth:sanctum`
+- **Respuesta exitosa:** Lista de tareas
 
-### Premium Partners
+### Listar tareas por usuario
+**Endpoint:** `GET /api/listTaskByUser/{id?}`
+- **Autenticación:** Requiere token de `auth:sanctum`
+- **Parámetro opcional:** `id` del usuario
+- **Respuesta exitosa:** Lista de tareas del usuario
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Actualizar una tarea
+**Endpoint:** `PUT /api/updateTask/{id}`
+- **Autenticación:** Requiere token de `auth:sanctum`
+- **Parámetros:**
+  ```json
+  {
+    "title": "Tarea actualizada",
+    "description": "Nueva descripción"
+  }
+  ```
+- **Respuesta exitosa:**
+  ```json
+  {
+    "message": "Tarea actualizada exitosamente"
+  }
+  ```
 
-## Contributing
+### Actualizar estado de una tarea
+**Endpoint:** `PATCH /api/updateStatusTask/{id}`
+- **Autenticación:** Requiere token de `auth:sanctum`
+- **Respuesta exitosa:**
+  ```json
+  {
+    "message": "Estado de la tarea actualizado"
+  }
+  ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Eliminar una tarea
+**Endpoint:** `DELETE /api/deleteTask/{id}`
+- **Autenticación:** Requiere token de `auth:sanctum`
+- **Respuesta exitosa:**
+  ```json
+  {
+    "message": "Tarea eliminada"
+  }
+  ```
 
-## Code of Conduct
+## Posibles Errores
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- **401 Unauthorized:** Token inválido o sesión expirada.
+- **404 Not Found:** Recurso no encontrado (ejemplo: tarea inexistente).
+- **422 Unprocessable Entity:** Datos inválidos o faltantes.
+- **500 Internal Server Error:** Error en el servidor.
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
